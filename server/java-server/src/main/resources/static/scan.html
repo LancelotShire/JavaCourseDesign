@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Barcode Scanner</title>
+    <script src="quagga.min.js"></script>
+    <style>
+        #interactive.viewport {
+            position: relative;
+            width: 100%;
+            height: auto;
+            max-width: 640px;
+            max-height: 480px;
+            margin: 0 auto;
+            border: 1px solid #333;
+        }
+        #interactive.viewport > canvas, #interactive.viewport > video {
+            max-width: 100%;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div id="interactive" class="viewport"></div>
+    <div id="barcode-result">Barcode: </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+          Quagga.init({
+            inputStream: {
+              type: 'LiveStream',
+              constraints: {
+                width: 640,
+                height: 480,
+                facingMode: 'environment'
+              },
+              target: document.querySelector('#interactive')
+            },
+            decoder: {
+              readers: ['ean_reader', 'ean_8_reader', 'code_39_reader', 'code_39_vin_reader', 'codabar_reader', 'upc_reader', 'upc_e_reader', 'i2of5_reader']
+            },
+            locator: {
+              patchSize: 'medium',
+              halfSample: true
+            },
+            numOfWorkers: 2,
+            locate: true
+          }, function (err) {
+            if (err) {
+              console.log(err);
+              return;
+            }
+            Quagga.start();
+          });
+
+          Quagga.onDetected(function (result) {
+            var code = result.codeResult.code;
+            document.getElementById('barcode-result').textContent = 'Barcode: ' + code;
+          });
+        });
+    </script>
+</body>
+</html>
