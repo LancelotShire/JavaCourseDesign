@@ -186,7 +186,7 @@ public class BaseController {
         Map node = dataRequest.getMap("node");
         Integer pid = CommonMethod.getInteger(node,"pid");
         Integer id = CommonMethod.getInteger(node,"id");
-        String name = CommonMethod.getString(node,"name");
+        String name = CommonMethod.getString(node,"value");
         String title = CommonMethod.getString(node,"title");
         String userTypeIds = CommonMethod.getString(node,"userTypeIds");
         Optional<MenuInfo> op;

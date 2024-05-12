@@ -62,17 +62,6 @@ public class Person {
     @Size(max = 20)
     private String address;
 
-    public String getEntry() {
-        return entry;
-    }
-
-    public void setEntry(String entry) {
-        this.entry = entry;
-    }
-
-    @Size(max = 20)
-    private String entry;
-
     @Size(max = 1000)
     private String introduce;
 

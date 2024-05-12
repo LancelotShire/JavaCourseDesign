@@ -33,17 +33,6 @@ public class Student {
     @Size(max = 50)
     private String className;
 
-    public String getGrade() {
-        return grade;
-    }
-
-    public void setGrade(String grade) {
-        this.grade = grade;
-    }
-
-    @Size(max = 20)
-    private String grade;
-
     public Integer getStudentId() {
         return studentId;
     }

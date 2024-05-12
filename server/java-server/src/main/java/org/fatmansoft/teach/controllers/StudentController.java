@@ -240,7 +240,6 @@ public class StudentController {
         personRepository.save(p);  // 修改保存人员信息
         s.setMajor(CommonMethod.getString(form, "major"));
         s.setClassName(CommonMethod.getString(form, "className"));
-        s.setGrade(CommonMethod.getString(form, "grade"));
         studentRepository.save(s);  //修改保存学生信息
         systemService.modifyLog(s,isNew);
         return CommonMethod.getReturnData(s.getStudentId());  // 将studentId返回前端
@@ -748,7 +747,7 @@ public class StudentController {
                 m.put("relation", f.getRelation());
                 m.put("name", f.getName());
                 m.put("gender", f.getGender());
-                m.put("age", f.getAge());
+                m.put("age", f.getAge()+"");
                 m.put("unit", f.getUnit());
                 dataList.add(m);
             }

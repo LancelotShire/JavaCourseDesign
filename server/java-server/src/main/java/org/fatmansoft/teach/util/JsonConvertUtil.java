@@ -199,7 +199,7 @@ public class JsonConvertUtil {
         else {
             str = "[{" + objectToJsonBody(list.get(0)) + "}";
             for(int i = 1; i < list.size();i++) {
-                str += ",{" +  objectToJsonBody(list.get(0)) + "}";
+                str += ",{" +  objectToJsonBody(list.get(i)) + "}";
             }
             str += "]";
         }

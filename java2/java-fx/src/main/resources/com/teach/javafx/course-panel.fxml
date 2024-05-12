@@ -14,6 +14,7 @@
             <TableColumn fx:id="nameColumn" prefWidth="90.0" text="课程名" />
             <TableColumn fx:id="creditColumn" prefWidth="60.0" text="学分" />
             <TableColumn fx:id="preCourseColumn" prefWidth="120.0" text="前序课" />
+            <TableColumn fx:id="operateColumn" prefWidth="120.0" text="操作" />
          </columns>
       </TableView>
    </center>

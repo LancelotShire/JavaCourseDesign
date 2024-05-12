@@ -17,7 +17,6 @@ public class StudentService {
             return m;
         m.put("major",s.getMajor());
         m.put("className",s.getClassName());
-        m.put("grade",s.getGrade());
         p = s.getPerson();
         if(p == null)
             return m;
@@ -35,7 +34,6 @@ public class StudentService {
         m.put("phone",p.getPhone());
         m.put("address",p.getAddress());
         m.put("introduce",p.getIntroduce());
-        m.put("entry",p.getEntry());
         return m;
     }
 

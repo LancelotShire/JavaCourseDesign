@@ -46,7 +46,7 @@ public class CourseController {
             m.put("courseId", c.getCourseId()+"");
             m.put("num",c.getNum());
             m.put("name",c.getName());
-            m.put("credit",c.getCredit());
+            m.put("credit",c.getCredit()+"");
             m.put("coursePath",c.getCoursePath());
             pc =c.getPreCourse();
             if(pc != null) {

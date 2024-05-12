@@ -2,7 +2,7 @@ package com.teach.javafx.models;
 
 import org.fatmansoft.teach.models.Person;
 
-public class  Student {
+public class Student {
     private Integer studentId;
     private Integer personId;
     private String num;
@@ -19,6 +19,16 @@ public class  Student {
     private String introduce;
     private String major;
     private String className;
+    private String grade;
+
+    public String getGrade() {
+        return grade;
+    }
+
+    public void setGrade(String grade) {
+        this.grade = grade;
+    }
+
     public Student(){
 
     }

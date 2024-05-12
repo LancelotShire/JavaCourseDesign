@@ -54,8 +54,6 @@ public class TeacherController extends ToolController {
     private TableColumn<Teacher,String> phoneColumn; //学生信息表 电话列
     @FXML
     private TableColumn<Teacher,String> addressColumn;//学生信息表 地址列
-    @FXML
-    private TableColumn<Teacher,String> entryColumn;//学生信息表 地址列
 
     @FXML
     private TextField numField; //学生信息  学号输入域
@@ -79,8 +77,6 @@ public class TeacherController extends ToolController {
     private TextField phoneField;   //学生信息  电话输入域
     @FXML
     private TextField addressField;  //学生信息  地址输入域
-    @FXML
-    private TextField entryField;  //学生信息  地址输入域
 
     @FXML
     private TextField numNameTextField;  //查询 姓名学号输入域
@@ -129,7 +125,6 @@ public class TeacherController extends ToolController {
         emailColumn.setCellValueFactory(cellData-> new SimpleStringProperty(cellData.getValue().getPerson().getEmail()));
         phoneColumn.setCellValueFactory(cellData-> new SimpleStringProperty(cellData.getValue().getPerson().getPhone()));
         addressColumn.setCellValueFactory(cellData-> new SimpleStringProperty(cellData.getValue().getPerson().getAddress()));
-        entryColumn.setCellValueFactory(cellData-> new SimpleStringProperty(cellData.getValue().getPerson().getEntry()));
         TableView.TableViewSelectionModel<Teacher> tsm = dataTableView.getSelectionModel();
         ObservableList<Integer> list = tsm.getSelectedIndices();
         list.addListener(this::onTableRowSelect);
@@ -157,7 +152,6 @@ public class TeacherController extends ToolController {
         emailField.setText("");
         phoneField.setText("");
         addressField.setText("");
-        entryField.setText("");
     }
 
     protected void changeStudentInfo() {
@@ -181,7 +175,6 @@ public class TeacherController extends ToolController {
         emailField.setText(teacher.getPerson().getEmail());
         phoneField.setText(teacher.getPerson().getPhone());
         addressField.setText(teacher.getPerson().getAddress());
-        entryField.setText(teacher.getPerson().getEntry());
 
     }
     /**
@@ -262,7 +255,6 @@ public class TeacherController extends ToolController {
         p.setEmail(emailField.getText());
         p.setPhone(phoneField.getText());
         p.setAddress(addressField.getText());
-        p.setEntry(entryField.getText());
         DataRequest req = new DataRequest();
         req.add("teacherId", teacherId);
         req.add("form", t);

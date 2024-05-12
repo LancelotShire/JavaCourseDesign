@@ -15,16 +15,6 @@ public class Person {
     private String address;
     private String introduce;
 
-    public String getEntry() {
-        return entry;
-    }
-
-    public void setEntry(String entry) {
-        this.entry = entry;
-    }
-
-    private String entry;
-
     public Integer getPersonId() {
         return personId;
     }
@@ -128,5 +118,4 @@ public class Person {
     public void setGenderName(String genderName) {
         this.genderName = genderName;
     }
-
 }

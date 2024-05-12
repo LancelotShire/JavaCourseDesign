@@ -1,8 +1,17 @@
 package com.teach.javafx.controller;
 
+import com.teach.javafx.MainApplication;
 import com.teach.javafx.controller.base.LocalDateStringConverter;
 import com.teach.javafx.controller.base.ToolController;
 import com.teach.javafx.request.*;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Group;
+import javafx.scene.Scene;
+import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.FlowPane;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import org.fatmansoft.teach.payload.request.DataRequest;
 import org.fatmansoft.teach.payload.response.DataResponse;
 import org.fatmansoft.teach.util.CommonMethod;
@@ -17,42 +26,44 @@ import javafx.stage.FileChooser;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Flow;
+
 /**
  * StudentController 登录交互控制类 对应 student_panel.fxml  对应于学生管理的后台业务处理的控制器，主要获取数据和保存数据的方法不同
- *  @FXML  属性 对应fxml文件中的
- *  @FXML 方法 对应于fxml文件中的 on***Click的属性
+ *
+ * @FXML 属性 对应fxml文件中的
+ * @FXML 方法 对应于fxml文件中的 on***Click的属性
  */
 public class StudentController extends ToolController {
     @FXML
     private TableView<Map> dataTableView;  //学生信息表
     @FXML
-    private TableColumn<Map,String> numColumn;   //学生信息表 编号列
+    private TableColumn<Map, String> numColumn;   //学生信息表 编号列
     @FXML
-    private TableColumn<Map,String> nameColumn; //学生信息表 名称列
+    private TableColumn<Map, String> nameColumn; //学生信息表 名称列
     @FXML
-    private TableColumn<Map,String> deptColumn;  //学生信息表 院系列
+    private TableColumn<Map, String> deptColumn;  //学生信息表 院系列
     @FXML
-    private TableColumn<Map,String> majorColumn; //学生信息表 专业列
+    private TableColumn<Map, String> majorColumn; //学生信息表 专业列
     @FXML
-    private TableColumn<Map,String> classNameColumn; //学生信息表 班级列
+    private TableColumn<Map, String> classNameColumn; //学生信息表 班级列
     @FXML
-    private TableColumn<Map,String> gradeColumn; //学生信息表 年级列
+    private TableColumn<Map, String> cardColumn; //学生信息表 证件号码列
     @FXML
-    private TableColumn<Map,String> cardColumn; //学生信息表 证件号码列
+    private TableColumn<Map, String> genderColumn; //学生信息表 性别列
     @FXML
-    private TableColumn<Map,String> genderColumn; //学生信息表 性别列
+    private TableColumn<Map, String> birthdayColumn; //学生信息表 出生日期列
     @FXML
-    private TableColumn<Map,String> birthdayColumn; //学生信息表 出生日期列
+    private TableColumn<Map, String> emailColumn; //学生信息表 邮箱列
     @FXML
-    private TableColumn<Map,String> emailColumn; //学生信息表 邮箱列
+    private TableColumn<Map, String> phoneColumn; //学生信息表 电话列
     @FXML
-    private TableColumn<Map,String> phoneColumn; //学生信息表 电话列
-    @FXML
-    private TableColumn<Map,String> addressColumn;//学生信息表 地址列
+    private TableColumn<Map, String> addressColumn;//学生信息表 地址列
 
     @FXML
     private TextField numField; //学生信息  学号输入域
@@ -64,8 +75,6 @@ public class StudentController extends ToolController {
     private TextField majorField; //学生信息  专业输入域
     @FXML
     private TextField classNameField; //学生信息  班级输入域
-    @FXML
-    private TextField gradeField; //学生信息  年级输入域
     @FXML
     private TextField cardField; //学生信息  证件号码输入域
     @FXML
@@ -86,7 +95,7 @@ public class StudentController extends ToolController {
 
     private ArrayList<Map> studentList = new ArrayList();  // 学生信息列表数据
     private List<OptionItem> genderList;   //性别选择列表数据
-    private ObservableList<Map> observableList= FXCollections.observableArrayList();  // TableView渲染列表
+    private ObservableList<Map> observableList = FXCollections.observableArrayList();  // TableView渲染列表
 
 
     /**
@@ -107,18 +116,17 @@ public class StudentController extends ToolController {
     @FXML
     public void initialize() {
         DataResponse res;
-        DataRequest req =new DataRequest();
-        req.add("numName","");
-        res = HttpRequestUtil.request("/api/student/getStudentList",req); //从后台获取所有学生信息列表集合
-        if(res != null && res.getCode()== 0) {
-            studentList = (ArrayList<Map>)res.getData();
+        DataRequest req = new DataRequest();
+        req.add("numName", "");
+        res = HttpRequestUtil.request("/api/student/getStudentList", req); //从后台获取所有学生信息列表集合
+        if (res != null && res.getCode() == 0) {
+            studentList = (ArrayList<Map>) res.getData();
         }
         numColumn.setCellValueFactory(new MapValueFactory("num"));  //设置列值工程属性
         nameColumn.setCellValueFactory(new MapValueFactory<>("name"));
         deptColumn.setCellValueFactory(new MapValueFactory<>("dept"));
         majorColumn.setCellValueFactory(new MapValueFactory<>("major"));
         classNameColumn.setCellValueFactory(new MapValueFactory<>("className"));
-        gradeColumn.setCellValueFactory(new MapValueFactory<>("grade"));
         cardColumn.setCellValueFactory(new MapValueFactory<>("card"));
         genderColumn.setCellValueFactory(new MapValueFactory<>("genderName"));
         birthdayColumn.setCellValueFactory(new MapValueFactory<>("birthday"));
@@ -138,14 +146,13 @@ public class StudentController extends ToolController {
     /**
      * 清除学生表单中输入信息
      */
-    public void clearPanel(){
+    public void clearPanel() {
         studentId = null;
         numField.setText("");
         nameField.setText("");
         deptField.setText("");
         majorField.setText("");
         classNameField.setText("");
-        gradeField.setText("");
         cardField.setText("");
         genderComboBox.getSelectionModel().select(-1);
         birthdayPick.getEditor().setText("");
@@ -156,25 +163,24 @@ public class StudentController extends ToolController {
 
     protected void changeStudentInfo() {
         Map form = dataTableView.getSelectionModel().getSelectedItem();
-        if(form == null) {
+        if (form == null) {
             clearPanel();
             return;
         }
-        studentId = CommonMethod.getInteger(form,"studentId");
+        studentId = CommonMethod.getInteger(form, "studentId");
         DataRequest req = new DataRequest();
-        req.add("studentId",studentId);
-        DataResponse res = HttpRequestUtil.request("/api/student/getStudentInfo",req);
-        if(res.getCode() != 0){
+        req.add("studentId", studentId);
+        DataResponse res = HttpRequestUtil.request("/api/student/getStudentInfo", req);
+        if (res.getCode() != 0) {
             MessageDialog.showDialog(res.getMsg());
             return;
         }
-        form = (Map)res.getData();
+        form = (Map) res.getData();
         numField.setText(CommonMethod.getString(form, "num"));
         nameField.setText(CommonMethod.getString(form, "name"));
         deptField.setText(CommonMethod.getString(form, "dept"));
         majorField.setText(CommonMethod.getString(form, "major"));
         classNameField.setText(CommonMethod.getString(form, "className"));
-        gradeField.setText(CommonMethod.getString(form, "grade "));
         cardField.setText(CommonMethod.getString(form, "card"));
         genderComboBox.getSelectionModel().select(CommonMethod.getOptionItemIndexByValue(genderList, CommonMethod.getString(form, "gender")));
         birthdayPick.getEditor().setText(CommonMethod.getString(form, "birthday"));
@@ -183,11 +189,12 @@ public class StudentController extends ToolController {
         addressField.setText(CommonMethod.getString(form, "address"));
 
     }
+
     /**
      * 点击学生列表的某一行，根据studentId ,从后台查询学生的基本信息，切换学生的编辑信息
      */
 
-    public void onTableRowSelect(ListChangeListener.Change<? extends Integer> change){
+    public void onTableRowSelect(ListChangeListener.Change<? extends Integer> change) {
         changeStudentInfo();
     }
 
@@ -198,16 +205,17 @@ public class StudentController extends ToolController {
     protected void onQueryButtonClick() {
         String numName = numNameTextField.getText();
         DataRequest req = new DataRequest();
-        req.add("numName",numName);
-        DataResponse res = HttpRequestUtil.request("/api/student/getStudentList",req);
-        if(res != null && res.getCode()== 0) {
-            studentList = (ArrayList<Map>)res.getData();
+        req.add("numName", numName);
+        DataResponse res = HttpRequestUtil.request("/api/student/getStudentList", req);
+        if (res != null && res.getCode() == 0) {
+            studentList = (ArrayList<Map>) res.getData();
             setTableViewData();
         }
     }
 
+
     /**
-     *  添加新学生， 清空输入信息， 输入相关信息，点击保存即可添加新的学生
+     * 添加新学生， 清空输入信息， 输入相关信息，点击保存即可添加新的学生
      */
     @FXML
     protected void onAddButtonClick() {
@@ -216,63 +224,61 @@ public class StudentController extends ToolController {
 
     /**
      * 点击删除按钮 删除当前编辑的学生的数据
-      */
+     */
     @FXML
     protected void onDeleteButtonClick() {
         Map form = dataTableView.getSelectionModel().getSelectedItem();
-        if(form == null) {
+        if (form == null) {
             MessageDialog.showDialog("没有选择，不能删除");
             return;
         }
         int ret = MessageDialog.choiceDialog("确认要删除吗?");
-        if(ret != MessageDialog.CHOICE_YES) {
+        if (ret != MessageDialog.CHOICE_YES) {
             return;
         }
-        studentId = CommonMethod.getInteger(form,"studentId");
+        studentId = CommonMethod.getInteger(form, "studentId");
         DataRequest req = new DataRequest();
         req.add("studentId", studentId);
-        DataResponse res = HttpRequestUtil.request("/api/student/studentDelete",req);
-        if(res.getCode() == 0) {
+        DataResponse res = HttpRequestUtil.request("/api/student/studentDelete", req);
+        if (res.getCode() == 0) {
             MessageDialog.showDialog("删除成功！");
             onQueryButtonClick();
-        }
-        else {
+        } else {
             MessageDialog.showDialog(res.getMsg());
         }
     }
+
     /**
      * 点击保存按钮，保存当前编辑的学生信息，如果是新添加的学生，后台添加学生
      */
     @FXML
     protected void onSaveButtonClick() {
-        if( numField.getText().equals("")) {
+        if (numField.getText().equals("")) {
             MessageDialog.showDialog("学号为空，不能修改");
             return;
         }
         Map form = new HashMap();
-        form.put("num",numField.getText());
-        form.put("name",nameField.getText());
-        form.put("dept",deptField.getText());
-        form.put("major",majorField.getText());
-        form.put("className",classNameField.getText());
-        form.put("grade",gradeField.getText());
-        form.put("card",cardField.getText());
-        if(genderComboBox.getSelectionModel() != null && genderComboBox.getSelectionModel().getSelectedItem() != null)
-           form.put("gender",genderComboBox.getSelectionModel().getSelectedItem().getValue());
-        form.put("birthday",birthdayPick.getEditor().getText());
-        form.put("email",emailField.getText());
-        form.put("phone",phoneField.getText());
-        form.put("address",addressField.getText());
+        form.put("num", numField.getText());
+        form.put("name", nameField.getText());
+        form.put("dept", deptField.getText());
+        form.put("major", majorField.getText());
+        form.put("className", classNameField.getText());
+        form.put("card", cardField.getText());
+        if (genderComboBox.getSelectionModel() != null && genderComboBox.getSelectionModel().getSelectedItem() != null)
+            form.put("gender", genderComboBox.getSelectionModel().getSelectedItem().getValue());
+        form.put("birthday", birthdayPick.getEditor().getText());
+        form.put("email", emailField.getText());
+        form.put("phone", phoneField.getText());
+        form.put("address", addressField.getText());
         DataRequest req = new DataRequest();
         req.add("studentId", studentId);
         req.add("form", form);
-        DataResponse res = HttpRequestUtil.request("/api/student/studentEditSave",req);
-        if(res.getCode() == 0) {
+        DataResponse res = HttpRequestUtil.request("/api/student/studentEditSave", req);
+        if (res.getCode() == 0) {
             studentId = CommonMethod.getIntegerFromObject(res.getData());
             MessageDialog.showDialog("提交成功！");
             onQueryButtonClick();
-        }
-        else {
+        } else {
             MessageDialog.showDialog(res.getMsg());
         }
     }
@@ -280,23 +286,25 @@ public class StudentController extends ToolController {
     /**
      * doNew() doSave() doDelete() 重写 ToolController 中的方法， 实现选择 新建，保存，删除 对学生的增，删，改操作
      */
-    public void doNew(){
+    public void doNew() {
         clearPanel();
     }
-    public void doSave(){
+
+    public void doSave() {
         onSaveButtonClick();
     }
-    public void doDelete(){
+
+    public void doDelete() {
         onDeleteButtonClick();
     }
 
     /**
      * 导出学生信息表的示例 重写ToolController 中的doExport 这里给出了一个导出学生基本信息到Excl表的示例， 后台生成Excl文件数据，传回前台，前台将文件保存到本地
      */
-    public void doExport(){
+    public void doExport() {
         String numName = numNameTextField.getText();
         DataRequest req = new DataRequest();
-        req.add("numName",numName);
+        req.add("numName", numName);
         byte[] bytes = HttpRequestUtil.requestByteData("/api/student/getStudentListExcl", req);
         if (bytes != null) {
             try {
@@ -306,17 +314,18 @@ public class StudentController extends ToolController {
                 fileDialog.getExtensionFilters().addAll(
                         new FileChooser.ExtensionFilter("XLSX 文件", "*.xlsx"));
                 File file = fileDialog.showSaveDialog(null);
-                if(file != null) {
+                if (file != null) {
                     FileOutputStream out = new FileOutputStream(file);
                     out.write(bytes);
                     out.close();
                 }
-            }catch(Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
 
     }
+
     @FXML
     protected void onImportButtonClick() {
         FileChooser fileDialog = new FileChooser();
@@ -326,13 +335,76 @@ public class StudentController extends ToolController {
                 new FileChooser.ExtensionFilter("XLSX 文件", "*.xlsx"));
         File file = fileDialog.showOpenDialog(null);
         String paras = "";
-        DataResponse res =HttpRequestUtil.importData("/api/term/importStudentData",file.getPath(),paras);
-        if(res.getCode() == 0) {
+        DataResponse res = HttpRequestUtil.importData("/api/term/importStudentData", file.getPath(), paras);
+        if (res.getCode() == 0) {
             MessageDialog.showDialog("上传成功！");
-        }
-        else {
+        } else {
             MessageDialog.showDialog(res.getMsg());
         }
     }
 
+    @FXML
+    protected void onFamilyButtonClick() {
+        DataRequest req = new DataRequest();
+        req.add("studentId", studentId);
+        DataResponse res = HttpRequestUtil.request("/api/student/getFamilyMemberList", req);
+        if (res.getCode() != 0) {
+            MessageDialog.showDialog(res.getMsg());
+            return;
+        }
+        List<Map> familyList = (List<Map>) res.getData();
+        ObservableList<Map> oList = FXCollections.observableArrayList(familyList);
+        Scene scene = null, pScene = null;
+        Stage stage;
+        stage = new Stage();
+        TableView<Map> table = new TableView<>(oList);
+        table.setEditable(true);
+        TableColumn<Map, String> relationColumn = new TableColumn<>("关系");
+        relationColumn.setCellValueFactory(new MapValueFactory("relation"));
+        relationColumn.setCellFactory(TextFieldTableCell.<Map>forTableColumn());
+        relationColumn.setOnEditCommit(event -> {
+            TableView tempTable = event.getTableView();
+            Map tempEntity = (Map) tempTable.getItems().get(event.getTablePosition().getRow());
+            tempEntity.put("relation",event.getNewValue());
+        });
+        table.getColumns().add(relationColumn);
+        TableColumn<Map, String> nameColumn = new TableColumn<>("姓名");
+        nameColumn.setCellValueFactory(new MapValueFactory("name"));
+        nameColumn.setCellFactory(TextFieldTableCell.<Map>forTableColumn());
+        table.getColumns().add(nameColumn);
+        TableColumn<Map, String> genderColumn = new TableColumn<>("性别");
+        genderColumn.setCellValueFactory(new MapValueFactory("gender"));
+        genderColumn.setCellFactory(TextFieldTableCell.<Map>forTableColumn());
+        table.getColumns().add(genderColumn);
+        TableColumn<Map, String> ageColumn = new TableColumn<>("年龄");
+        ageColumn.setCellValueFactory(new MapValueFactory("age"));
+        ageColumn.setCellFactory(TextFieldTableCell.<Map>forTableColumn());
+        table.getColumns().add(ageColumn);
+        TableColumn<Map, String> unitColumn = new TableColumn<>("单位");
+        unitColumn.setCellValueFactory(new MapValueFactory("unit"));
+        unitColumn.setCellFactory(TextFieldTableCell.<Map>forTableColumn());
+        table.getColumns().add(unitColumn);
+        BorderPane root = new BorderPane();
+        FlowPane flowPane = new FlowPane();
+        Button obButton = new Button("确定");
+        obButton.setOnAction(event -> {
+            for(Map map: table.getItems()) {
+                System.out.println("map:"+map);
+            }
+            stage.close();
+        });
+        flowPane.getChildren().add(obButton);
+        root.setCenter(table);
+        root.setBottom(flowPane);
+        scene = new Scene(root, 260, 140);
+        stage.initOwner(MainApplication.getMainStage());
+        stage.initModality(Modality.NONE);
+        stage.setAlwaysOnTop(true);
+        stage.setScene(scene);
+        stage.setTitle("成绩录入对话框！");
+        stage.setOnCloseRequest(event -> {
+            MainApplication.setCanClose(true);
+        });
+        stage.showAndWait();
+    }
 }

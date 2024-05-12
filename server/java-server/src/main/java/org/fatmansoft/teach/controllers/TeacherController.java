@@ -157,7 +157,6 @@ public class TeacherController {
         p.setEmail(CommonMethod.getString(pForm, "email"));
         p.setPhone(CommonMethod.getString(pForm, "phone"));
         p.setAddress(CommonMethod.getString(pForm, "address"));
-        p.setEntry(CommonMethod.getString(pForm,"entry"));
         personRepository.save(p);  // 修改保存人员信息
         s.setTitle(CommonMethod.getString(form, "title"));
         s.setDegree(CommonMethod.getString(form, "degree"));

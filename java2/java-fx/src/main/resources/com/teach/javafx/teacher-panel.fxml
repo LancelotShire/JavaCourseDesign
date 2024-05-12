@@ -80,7 +80,6 @@
                   <TableColumn fx:id="emailColumn" prefWidth="125.0" text="邮箱" />
                   <TableColumn fx:id="phoneColumn" prefWidth="95.0" text="电话" />
                   <TableColumn fx:id="addressColumn" prefWidth="145.0" text="地址" />
-                  <TableColumn fx:id="entryColumn" prefWidth="125.0" text="入职时间" />
                </columns>
             </TableView>
             <VBox alignment="TOP_CENTER" spacing="20.0" >
@@ -128,8 +127,6 @@
                      <TextField fx:id="phoneField" GridPane.columnIndex="1" GridPane.rowIndex="9" />
                      <Label text="地址" GridPane.rowIndex="10" />
                      <TextField fx:id="addressField" GridPane.columnIndex="1" GridPane.rowIndex="10" />
-                     <Label text="入职时间" GridPane.rowIndex="11" />
-                     <TextField fx:id="entryField" GridPane.columnIndex="1" GridPane.rowIndex="11" />
                   </children>
                </GridPane>
                <FlowPane alignment="CENTER" columnHalignment="CENTER" prefHeight="36.0">
