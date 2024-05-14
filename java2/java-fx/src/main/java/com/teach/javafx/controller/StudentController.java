@@ -270,10 +270,12 @@ public class StudentController extends ToolController {
         form.put("email", emailField.getText());
         form.put("phone", phoneField.getText());
         form.put("address", addressField.getText());
+
         DataRequest req = new DataRequest();
         req.add("studentId", studentId);
         req.add("form", form);
         DataResponse res = HttpRequestUtil.request("/api/student/studentEditSave", req);
+
         if (res.getCode() == 0) {
             studentId = CommonMethod.getIntegerFromObject(res.getData());
             MessageDialog.showDialog("提交成功！");

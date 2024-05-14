@@ -87,6 +87,7 @@ public class MainFrameController {
         item.setOnAction(this::changeContent);
         menu.getItems().add(item);
     }
+
     public void initMenuBar(List<Map> mList){
         Menu menu;
         MenuItem item;

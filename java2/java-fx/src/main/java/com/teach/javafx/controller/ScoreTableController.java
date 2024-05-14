@@ -105,6 +105,7 @@ public class ScoreTableController {
         }
         dataTableView.setItems(observableList);
     }
+
     public void editItem(String name){
         if(name == null)
             return;
@@ -116,10 +117,9 @@ public class ScoreTableController {
         stage.showAndWait();
 
     }
+
     @FXML
     public void initialize() {
-
-
         studentNumColumn.setCellValueFactory(new MapValueFactory("studentNum"));  //设置列值工程属性
         studentNameColumn.setCellValueFactory(new MapValueFactory<>("studentName"));
         classNameColumn.setCellValueFactory(new MapValueFactory<>("className"));
@@ -137,6 +137,7 @@ public class ScoreTableController {
         studentComboBox.getItems().addAll(studentList);
         courseComboBox.getItems().addAll(item);
         courseComboBox.getItems().addAll(courseList);
+
         dataTableView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         onQueryButtonClick();
     }
@@ -166,6 +167,7 @@ public class ScoreTableController {
             throw new RuntimeException(e);
         }
     }
+
     public void doClose(String cmd, Map data) {
         MainApplication.setCanClose(true);
         stage.close();
@@ -192,6 +194,7 @@ public class ScoreTableController {
             onQueryButtonClick();
         }
     }
+
     @FXML
     private void onAddButtonClick() {
         initDialog();
@@ -199,6 +202,7 @@ public class ScoreTableController {
         MainApplication.setCanClose(false);
         stage.showAndWait();
     }
+
     @FXML
     private void onEditButtonClick() {
 //        dataTableView.getSelectionModel().getSelectedItems();
@@ -212,6 +216,7 @@ public class ScoreTableController {
         MainApplication.setCanClose(false);
         stage.showAndWait();
     }
+
     @FXML
     private void onDeleteButtonClick() {
         Map form = dataTableView.getSelectionModel().getSelectedItem();

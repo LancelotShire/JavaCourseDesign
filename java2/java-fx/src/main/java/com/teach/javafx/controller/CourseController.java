@@ -1,8 +1,11 @@
 package com.teach.javafx.controller;
 
 import com.teach.javafx.MainApplication;
+import com.teach.javafx.controller.base.MessageDialog;
+import com.teach.javafx.request.OptionItem;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.cell.MapValueFactory;
 import com.teach.javafx.request.HttpRequestUtil;
 import javafx.collections.FXCollections;
@@ -14,8 +17,10 @@ import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.FlowPane;
 import org.fatmansoft.teach.payload.request.DataRequest;
 import org.fatmansoft.teach.payload.response.DataResponse;
+import org.fatmansoft.teach.util.CommonMethod;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -38,13 +43,25 @@ public class CourseController {
     @FXML
     private TableColumn<Map,FlowPane> operateColumn;
 
+    private List<OptionItem> nameList;
+    @FXML
+    private ComboBox<OptionItem> nameComboBox;
+
+
     private List<Map> courseList = new ArrayList();  // 学生信息列表数据
     private ObservableList<Map> observableList= FXCollections.observableArrayList();  // TableView渲染列表
 
     @FXML
     private void onQueryButtonClick(){
+        Integer courseId = 0;
+        OptionItem op;
+        op = nameComboBox.getSelectionModel().getSelectedItem();
+        if(op != null)
+            courseId = Integer.parseInt(op.getValue());
+        System.out.println(courseId);
         DataResponse res;
         DataRequest req =new DataRequest();
+        req.add("numName",courseId);
         res = HttpRequestUtil.request("/api/course/getCourseList",req); //从后台获取所有学生信息列表集合
         if(res != null && res.getCode()== 0) {
             courseList = (ArrayList<Map>)res.getData();
@@ -78,13 +95,35 @@ public class CourseController {
             }
             dataTableView.setItems(observableList);
     }
+
     public void saveItem(String name){
         if(name == null)
             return;
         int j = Integer.parseInt(name.substring(4,name.length()));
         Map data = courseList.get(j);
         System.out.println(data);
+
+        DataRequest req = new DataRequest();
+
+        Map rowData = dataTableView.getItems().get(j);
+
+        req.add("courseId", rowData.get("courseId"));
+        req.add("preCourseId", rowData.get("preCourseId"));
+        req.add("coursePath", rowData.get("coursePath"));
+        req.add("num", rowData.get("num"));
+        req.add("name", rowData.get("name"));
+        req.add("credit", rowData.get("credit"));
+
+        DataResponse res = HttpRequestUtil.request("/api/course/courseSave", req);
+
+        if (res.getCode() == 0) {
+            MessageDialog.showDialog("提交成功！");
+            onQueryButtonClick();
+        } else {
+            MessageDialog.showDialog(res.getMsg());
+        }
     }
+
     public void deleteItem(String name){
         if(name == null)
             return;
@@ -94,12 +133,42 @@ public class CourseController {
     }
 
     @FXML
+    public void addItem() {
+        String num = "000";
+        DataRequest copy = new DataRequest();
+        copy.add("preCourseId", null);
+        copy.add("coursePath", null);
+        copy.add("num", num);
+        copy.add("name", null);
+        copy.add("credit", 0);
+        System.out.println(copy);
+
+        DataResponse res = HttpRequestUtil.request("/api/course/courseSave", copy);
+
+        if (res.getCode() == 0) {
+            MessageDialog.showDialog("提交成功！");
+            onQueryButtonClick();
+        } else {
+            MessageDialog.showDialog(res.getMsg());
+        }
+
+    }
+
+    @FXML
     public void initialize() {
+        DataRequest req =new DataRequest();
+        nameList = HttpRequestUtil.requestOptionItemList("/api/score/getCourseItemOptionList",req);
+        OptionItem item = new OptionItem(null,"0","请选择");
+        nameComboBox.getItems().addAll(item);
+        nameComboBox.getItems().addAll(nameList);
+
         numColumn.setCellValueFactory(new MapValueFactory("num"));
         numColumn.setCellFactory(TextFieldTableCell.forTableColumn());
         numColumn.setOnEditCommit(event -> {
             Map<String, Object> map = event.getRowValue();
+            System.out.println(map);
             map.put("num", event.getNewValue());
+            System.out.println(map);
         });
         nameColumn.setCellValueFactory(new MapValueFactory("name"));
         nameColumn.setCellFactory(TextFieldTableCell.forTableColumn());
