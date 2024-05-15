@@ -10,7 +10,7 @@
             <AnchorPane prefHeight="49.0" prefWidth="600.0">
                <children>
                   <Button layoutX="255.0" layoutY="12.0" mnemonicParsing="false" onAction="#onQueryButtonClick" text="查询成绩信息" />
-                  <Button layoutX="357.0" layoutY="12.0" mnemonicParsing="false" text="保存成绩数据" />
+                  <Button layoutX="357.0" layoutY="12.0" mnemonicParsing="false" text="保存成绩数据" onAction="#save"/>
                </children>
             </AnchorPane>
             <TableView fx:id="dataTableView" prefHeight="348.0" prefWidth="600.0">

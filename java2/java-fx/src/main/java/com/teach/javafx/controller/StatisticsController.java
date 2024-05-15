@@ -152,4 +152,10 @@ public class StatisticsController {
         return result;
     }
 
+    @FXML
+    private void save(){
+        DataRequest req = new DataRequest();
+        DataResponse res = HttpRequestUtil.request("/api/scoreStatistics/getScoreStatisticsList",req);
+    }
+
 }
