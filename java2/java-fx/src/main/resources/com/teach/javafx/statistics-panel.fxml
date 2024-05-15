@@ -1,39 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ComboBox?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 
-
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.teach.javafx.controller.StatisticsController">
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.teach.javafx.controller.StatisticsController">
    <children>
       <VBox layoutY="7.0" prefHeight="393.0" prefWidth="600.0">
          <children>
             <AnchorPane prefHeight="49.0" prefWidth="600.0">
                <children>
-                  <Button layoutX="255.0" layoutY="12.0" mnemonicParsing="false" text="查询成绩信息" onAction="#onQueryButtonClick"/>
+                  <Button layoutX="255.0" layoutY="12.0" mnemonicParsing="false" onAction="#onQueryButtonClick" text="查询成绩信息" />
+                  <Button layoutX="357.0" layoutY="12.0" mnemonicParsing="false" text="保存成绩数据" />
                </children>
             </AnchorPane>
             <TableView fx:id="dataTableView" prefHeight="348.0" prefWidth="600.0">
               <columns>
-                <TableColumn fx:id="studentNameColumn" prefWidth="75.0" text="姓名"  />
-                <TableColumn fx:id="studentNumColumn" prefWidth="75.0" text="学号"  />
+                <TableColumn fx:id="studentNameColumn" prefWidth="75.0" text="姓名" />
+                <TableColumn fx:id="studentNumColumn" prefWidth="75.0" text="学号" />
                   <TableColumn fx:id="classNameColumn" prefWidth="75.0" text="班级" />
-                  <TableColumn fx:id="averageScoreColumn" prefWidth="75.0" text="平均分"  />
-                  <TableColumn fx:id="goColumn" prefWidth="75.0" text="五分制绩点"  />
-                  <TableColumn fx:id="hyakuColumn" prefWidth="75.0" text="百分制绩点"  />
-                  <TableColumn fx:id="totalCreditColumn" prefWidth="75.0" text="总学分"  />
+                  <TableColumn fx:id="averageScoreColumn" prefWidth="75.0" text="平均分" />
+                  <TableColumn fx:id="goColumn" prefWidth="75.0" text="五分制绩点" />
+                  <TableColumn fx:id="hyakuColumn" prefWidth="75.0" text="百分制绩点" />
+                  <TableColumn fx:id="totalCreditColumn" prefWidth="75.0" text="总学分" />
               </columns>
             </TableView>
          </children>
       </VBox>
       <AnchorPane layoutY="-143.0" prefHeight="200.0" prefWidth="200.0">
          <children>
-            <ComboBox layoutX="88.0" layoutY="163.0" prefWidth="150.0" fx:id="nameComboBox"/>
+            <ComboBox fx:id="nameComboBox" layoutX="88.0" layoutY="163.0" prefWidth="150.0" />
             <Label layoutX="50.0" layoutY="167.0" text="姓名" />
          </children>
       </AnchorPane>
