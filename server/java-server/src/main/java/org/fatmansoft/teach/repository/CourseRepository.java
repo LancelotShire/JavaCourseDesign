@@ -19,8 +19,7 @@ public interface CourseRepository extends JpaRepository<Course,Integer> {
     @Query(value = "from Course where ?1='' or num like %?1% or name like %?1% ")
     List<Course> findCourseListByNumName(String numName);
 
-    @Query(value = "from Course where ?1='' or num like %?1%")
-    List<Course> findByNum(String num);
+    Optional<Course> findByNum(String num);
 
     List<Course> findByName(String name);
 }

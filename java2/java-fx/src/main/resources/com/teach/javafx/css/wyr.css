@@ -1,0 +1,94 @@
+.root {
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+    -my-highlight-color: #6950f4;
+    -my-hover-color: derive(-fx-background, -15%);
+    -my-armed-color: derive(-fx-background, -27%);
+}
+.scroll-pane {
+    -fx-background-color: -fx-background;
+}
+.scroll-bar {
+    -fx-background-color: -fx-background;
+}
+.thumb {
+    -fx-background-color: derive(-fx-background, -20%);
+}
+.thumb:hover {
+    -fx-background-color: derive(-fx-background, -27%);
+}
+.thumb:pressed {
+    -fx-background-color: derive(-fx-background, -40%);
+}
+.scroll-bar:vertical > .thumb {
+    -fx-background-radius: 0;
+    -fx-background-insets: 0 3 0 1.5;
+}
+.scroll-bar:horizontal > .thumb {
+    -fx-background-radius: 0;
+    -fx-background-insets: 2 0 2.5 0;
+}
+.corner {
+    -fx-background-color: -fx-background;
+}
+.combo-box {
+    -fx-background-color: -fx-background;
+    -fx-border-radius: 0;
+    -fx-border-width: 4;
+    -fx-border-insets: 0 5 0 5;
+    -fx-border-color: transparent transparent -my-highlight-color transparent;
+}
+.combo-box:hover {
+    -fx-border-color: transparent transparent derive(-my-highlight-color, -15%) transparent;
+}
+.combo-box:showing {
+    -fx-border-color: transparent transparent derive(-my-highlight-color, -25%) transparent;
+}
+.button {
+    -fx-background-color: -fx-background;
+    -fx-border-color: derive(-fx-background, -20%);
+    -fx-border-width: .55;
+}
+.button:hover {
+    -fx-background-color: -my-hover-color;
+    -fx-border-width: .55; /*Overide modena.css effect of button highlighting*/
+}
+.button:armed {
+    -fx-background-color: -my-armed-color;
+    -fx-border-width: .55; /*Overide modena.css effect of button highlighting*/
+}
+.tab-header-background {
+    -fx-background-color: -my-highlight-color;
+}
+.tab-header-area {
+    -fx-padding: 0 5 0 5;
+}
+.tab {
+    -fx-background-radius: 0;
+    -fx-background-insets: 0;
+    -fx-background-color: -my-highlight-color;
+    -fx-border-width: 5;
+    -fx-border-insets: 0 -5 0 -5;
+    -fx-border-color: transparent;
+}
+.tab:hover {
+    -fx-background-color: derive(-my-highlight-color, -7%);
+}
+.tab:selected {
+    -fx-background-color: derive(-my-highlight-color, 14%);
+    -fx-border-insets: 0 -5 0 -5;
+    -fx-border-width: 5;
+    -fx-border-color: transparent transparent -fx-background transparent;
+}
+.tab-pane {
+    -fx-border-color: transparent;
+    -fx-border-width: 0;
+    -fx-padding: 0;
+    -fx-tab-min-height: 3em;
+    -fx-tab-max-height: 3em;
+}
+.tab-label {
+    -fx-text-fill: white;
+    -fx-font-size: 1.55em;
+    -fx-font-weight: bold;
+}

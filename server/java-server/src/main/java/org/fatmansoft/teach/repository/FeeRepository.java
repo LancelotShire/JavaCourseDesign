@@ -13,7 +13,8 @@ import java.util.Optional;
  * List<Fee> findListByStudent(Integer studentId);  查询学生（student_id）所有的消费记录  JPQL 注解
  */
 public interface FeeRepository extends JpaRepository<Fee,Integer> {
-
+    @Query(value="from Fee where (?1=0 or student.studentId=?1)" )
+    List<Fee> findByStudentStudentId(Integer studentId);
     Optional<Fee> findByStudentStudentIdAndDay(Integer studentId, String day);
 
     @Query(value= "from Fee where student.studentId=?1 order by day")

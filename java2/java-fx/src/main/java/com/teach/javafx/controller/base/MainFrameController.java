@@ -18,7 +18,6 @@ import org.fatmansoft.teach.payload.response.DataResponse;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -87,7 +86,6 @@ public class MainFrameController {
         item.setOnAction(this::changeContent);
         menu.getItems().add(item);
     }
-
     public void initMenuBar(List<Map> mList){
         Menu menu;
         MenuItem item;
@@ -141,6 +139,14 @@ public class MainFrameController {
         TreeItem<MyTreeNode> menu;
         for ( Map m :mList) {
             sList = (List<Map>)m.get("sList");
+
+            /*
+            System.out.println("*********");
+            System.out.println((String)m.get("title"));
+            System.out.println("*********");
+
+             */
+
             menu = new TreeItem<>(new MyTreeNode(null,(String)m.get("name") ,(String)m.get("title"),0));
             parent.getChildren().add(menu);
             if(sList !=  null && sList.size()> 0) {
@@ -160,6 +166,8 @@ public class MainFrameController {
         for(i = 0; i < mList.size();i++) {
             m = mList.get(i);
             sList = (List<Map>)m.get("sList");
+
+
             menu = new TreeItem<>(new MyTreeNode(null, (String)m.get("name"), (String)m.get("title"), (Integer)m.get("isLeft")));
             if(sList != null && sList.size()> 0) {
                 addMenuItems(menu,sList);
@@ -204,7 +212,6 @@ public class MainFrameController {
         initMenuTree(mList);
         contentTabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.ALL_TABS);
         contentTabPane.setStyle("-fx-background-image: url('shanda1.jpg'); -fx-background-repeat: no-repeat; -fx-background-size: cover;");  //inline选择器
-
 
     }
 

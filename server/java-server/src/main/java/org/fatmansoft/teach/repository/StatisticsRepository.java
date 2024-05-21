@@ -10,6 +10,9 @@ import java.util.List;
 @Repository
 public interface StatisticsRepository extends JpaRepository<Statistics,Integer> {
 
-    @Query(value="from course where ?1=0")
-    List<Statistics> findByStudentNum(Integer studentNum);
+    @Query(value = "from Statistics s where ?1 = '' or s.statisticsId = ?1")
+    List<Statistics> findByStatisticsId(String statisticsId);
+
+    @Query(value = "from Statistics s where ?1 = '' or s.studentName like %?1% or s.studentNum like %?1%")
+    List<Statistics> findByStudentNumName(String numName);
 }

@@ -21,6 +21,8 @@ public class Fee {
     private String day;
     private Double money;
 
+    private String buy;
+
     public Integer getFeeId() {
         return feeId;
     }
@@ -37,7 +39,13 @@ public class Fee {
     public void setMoney(Double money) {
         this.money = money;
     }
+    public String getBuy() {
+        return buy;
+    }
 
+    public void setBuy(String buy) {
+        this.buy = buy;
+    }
     public String getDay() {
         return day;
     }

@@ -28,10 +28,13 @@ import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBo
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.URLEncoder;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 /**
  * StudentController 主要是为学生管理数据管理提供的Web请求服务
@@ -122,7 +125,7 @@ public class StudentController {
     @PostMapping("/studentDelete")
     public DataResponse studentDelete(@Valid @RequestBody DataRequest dataRequest) {
         Integer studentId = dataRequest.getInteger("studentId");  //获取student_id值
-        studentId = null;
+
         Student s = null;
         Optional<Student> op;
         if (studentId != null) {
@@ -342,8 +345,10 @@ public class StudentController {
     @PostMapping("/getStudentIntroduceData")
     @PreAuthorize("hasRole('ROLE_STUDENT')")
     public DataResponse getStudentIntroduceData(@Valid @RequestBody DataRequest dataRequest) {
+
         String username = CommonMethod.getUsername();
         Optional<Student> sOp = studentRepository.findByPersonNum(username);  // 查询获得 Student对象
+
         if (!sOp.isPresent())
             return CommonMethod.getReturnMessageError("学生不存在！");
         Student s = sOp.get();
@@ -356,6 +361,31 @@ public class StudentController {
         data.put("feeList", getStudentFeeList(s.getStudentId()));
         return CommonMethod.getReturnData(data);//将前端所需数据保留Map对象里，返还前端
     }
+
+
+    @PostMapping("/getStudentIntroduceDataByAdmin")
+    @PreAuthorize("hasRole('ADMIN')")
+    public DataResponse getStudentIntroduceDataByAdmin(@Valid @RequestBody DataRequest dataRequest) {
+
+        Integer studentId = dataRequest.getInteger("studentId");
+        System.out.println("getStudentIntroduceData:studentId" + studentId);
+        Optional<Student>    sOp = studentRepository.findByStudentId(studentId);
+
+
+        if (!sOp.isPresent())
+            return CommonMethod.getReturnMessageError("学生不存在！");
+        Student s = sOp.get();
+        Map info = studentService.getMapFromStudent(s);  // 查询学生信息Map对象
+        List<Score> sList = scoreRepository.findByStudentStudentId(s.getStudentId()); //获得学生成绩对象集合
+        Map data = new HashMap();
+        data.put("info", info);
+        data.put("scoreList", getStudentScoreList(sList));
+        data.put("markList", getStudentMarkList(sList));
+        data.put("feeList", getStudentFeeList(s.getStudentId()));
+        return CommonMethod.getReturnData(data);//将前端所需数据保留Map对象里，返还前端
+    }
+
+
 
     /**
      * saveStudentIntroduce 前端学生个人简介信息introduce提交服务
@@ -587,13 +617,13 @@ public class StudentController {
             Font secondTitleFont = new Font(bfChinese, 15, Font.BOLD, CMYKColor.BLUE); //二级标题
             Font underlineFont = new Font(bfChinese, 11, Font.UNDERLINE); //下划线斜体
             //设置字体
-            com.itextpdf.text.Font FontChinese24 = new com.itextpdf.text.Font(bfChinese, 24, com.itextpdf.text.Font.BOLD);
-            com.itextpdf.text.Font FontChinese18 = new com.itextpdf.text.Font(bfChinese, 18, com.itextpdf.text.Font.BOLD);
-            com.itextpdf.text.Font FontChinese16 = new com.itextpdf.text.Font(bfChinese, 16, com.itextpdf.text.Font.BOLD);
-            com.itextpdf.text.Font FontChinese12 = new com.itextpdf.text.Font(bfChinese, 12, com.itextpdf.text.Font.NORMAL);
-            com.itextpdf.text.Font FontChinese11Bold = new com.itextpdf.text.Font(bfChinese, 11, com.itextpdf.text.Font.BOLD);
-            com.itextpdf.text.Font FontChinese11 = new com.itextpdf.text.Font(bfChinese, 11, com.itextpdf.text.Font.ITALIC);
-            com.itextpdf.text.Font FontChinese11Normal = new com.itextpdf.text.Font(bfChinese, 11, com.itextpdf.text.Font.NORMAL);
+            Font FontChinese24 = new Font(bfChinese, 24, Font.BOLD);
+            Font FontChinese18 = new Font(bfChinese, 18, Font.BOLD);
+            Font FontChinese16 = new Font(bfChinese, 16, Font.BOLD);
+            Font FontChinese12 = new Font(bfChinese, 12, Font.NORMAL);
+            Font FontChinese11Bold = new Font(bfChinese, 11, Font.BOLD);
+            Font FontChinese11 = new Font(bfChinese, 11, Font.ITALIC);
+            Font FontChinese11Normal = new Font(bfChinese, 11, Font.NORMAL);
             ByteArrayOutputStream out = new ByteArrayOutputStream();
             //设置要导出的pdf的标题
             String title = "霸道流氓气质";
@@ -673,13 +703,13 @@ public class StudentController {
         Font secondTitleFont = new Font(bfChinese, 15, Font.BOLD, CMYKColor.BLUE); //二级标题
         Font underlineFont = new Font(bfChinese, 11, Font.UNDERLINE); //下划线斜体
         //设置字体
-        com.itextpdf.text.Font FontChinese24 = new com.itextpdf.text.Font(bfChinese, 24, com.itextpdf.text.Font.BOLD);
-        com.itextpdf.text.Font FontChinese18 = new com.itextpdf.text.Font(bfChinese, 18, com.itextpdf.text.Font.BOLD);
-        com.itextpdf.text.Font FontChinese16 = new com.itextpdf.text.Font(bfChinese, 16, com.itextpdf.text.Font.BOLD);
-        com.itextpdf.text.Font FontChinese12 = new com.itextpdf.text.Font(bfChinese, 12, com.itextpdf.text.Font.NORMAL);
-        com.itextpdf.text.Font FontChinese11Bold = new com.itextpdf.text.Font(bfChinese, 11, com.itextpdf.text.Font.BOLD);
-        com.itextpdf.text.Font FontChinese11 = new com.itextpdf.text.Font(bfChinese, 11, com.itextpdf.text.Font.ITALIC);
-        com.itextpdf.text.Font FontChinese11Normal = new com.itextpdf.text.Font(bfChinese, 11, com.itextpdf.text.Font.NORMAL);
+        Font FontChinese24 = new Font(bfChinese, 24, Font.BOLD);
+        Font FontChinese18 = new Font(bfChinese, 18, Font.BOLD);
+        Font FontChinese16 = new Font(bfChinese, 16, Font.BOLD);
+        Font FontChinese12 = new Font(bfChinese, 12, Font.NORMAL);
+        Font FontChinese11Bold = new Font(bfChinese, 11, Font.BOLD);
+        Font FontChinese11 = new Font(bfChinese, 11, Font.ITALIC);
+        Font FontChinese11Normal = new Font(bfChinese, 11, Font.NORMAL);
 
         //设置要导出的pdf的标题
         String title = "霸道流氓气质";
@@ -758,7 +788,7 @@ public class StudentController {
     @PostMapping("/familyMemberSave")
     @PreAuthorize(" hasRole('ADMIN') or  hasRole('STUDENT')")
     public DataResponse familyMemberSave(@Valid @RequestBody DataRequest dataRequest) {
-        Map form = dataRequest.getMap("form");
+        Map form = dataRequest.getData();
         Integer studentId = CommonMethod.getInteger(form,"studentId");
         Integer memberId = CommonMethod.getInteger(form,"memberId");
         Optional<FamilyMember> op;
@@ -769,7 +799,7 @@ public class StudentController {
                 f = op.get();
             }
         }
-        if(f== null) {
+        if(f == null) {
             f = new FamilyMember();
             f.setStudent(studentRepository.findById(studentId).get());
         }

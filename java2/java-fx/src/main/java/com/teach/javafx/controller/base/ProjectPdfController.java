@@ -1,6 +1,5 @@
 package com.teach.javafx.controller.base;
 
-import com.teach.javafx.MainApplication;
 import javafx.fxml.FXML;
 import javafx.scene.control.Pagination;
 import javafx.scene.image.ImageView;

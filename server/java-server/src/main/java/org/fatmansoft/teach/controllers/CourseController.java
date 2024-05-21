@@ -1,11 +1,14 @@
 package org.fatmansoft.teach.controllers;
 
 import org.fatmansoft.teach.models.Course;
+import org.fatmansoft.teach.models.CourseChoose;
 import org.fatmansoft.teach.models.Score;
 import org.fatmansoft.teach.payload.request.DataRequest;
 import org.fatmansoft.teach.payload.response.DataResponse;
+import org.fatmansoft.teach.repository.CourseChooseRepository;
 import org.fatmansoft.teach.repository.CourseRepository;
 import org.fatmansoft.teach.repository.PersonRepository;
+import org.fatmansoft.teach.repository.ScoreRepository;
 import org.fatmansoft.teach.util.CommonMethod;
 import org.fatmansoft.teach.util.JsonConvertUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +34,10 @@ public class CourseController {
     private CourseRepository courseRepository;
     @Autowired
     private PersonRepository personRepository;
+    @Autowired
+    private CourseChooseRepository courseChooseRepository;
+    @Autowired
+    private ScoreRepository scoreRepository;
 
     @PostMapping("/getCourseList")
     public DataResponse getCourseList(@Valid @RequestBody DataRequest dataRequest) {
@@ -100,6 +107,10 @@ public class CourseController {
             if(op.isPresent()) {
                 c = op.get();
                 courseRepository.delete(c);
+//                List<CourseChoose> courseChooseList = courseChooseRepository.findByCourse(c);
+//                courseChooseRepository.deleteAll(courseChooseList);
+//                List<Score> scoreList = scoreRepository.findByCourse(c);
+//                scoreRepository.deleteAll(scoreList);
             }
         }
         return CommonMethod.getReturnMessageOK();

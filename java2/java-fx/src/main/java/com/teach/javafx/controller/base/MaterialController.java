@@ -1,10 +1,14 @@
 package com.teach.javafx.controller.base;
 
-import com.teach.javafx.request.*;
+import com.teach.javafx.request.HttpRequestUtil;
+import com.teach.javafx.request.MyTreeNode;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
-import javafx.scene.control.cell.*;
+import javafx.scene.control.TreeItem;
+import javafx.scene.control.TreeTableColumn;
+import javafx.scene.control.TreeTableView;
+import javafx.scene.control.cell.TextFieldTreeTableCell;
+import javafx.scene.control.cell.TreeItemPropertyValueFactory;
 import javafx.stage.FileChooser;
 import org.fatmansoft.teach.payload.request.DataRequest;
 

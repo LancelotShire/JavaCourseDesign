@@ -3,31 +3,39 @@ package com.teach.javafx.controller;
 import com.teach.javafx.controller.base.MessageDialog;
 import com.teach.javafx.controller.base.ToolController;
 import com.teach.javafx.request.HttpRequestUtil;
-import org.fatmansoft.teach.payload.request.DataRequest;
-import org.fatmansoft.teach.payload.response.DataResponse;
-import org.fatmansoft.teach.util.CommonMethod;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.chart.*;
-import javafx.scene.control.*;
+import javafx.scene.chart.BarChart;
+import javafx.scene.chart.PieChart;
+import javafx.scene.chart.XYChart;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.cell.MapValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.web.HTMLEditor;
 import javafx.stage.FileChooser;
+import org.fatmansoft.teach.payload.request.DataRequest;
+import org.fatmansoft.teach.payload.response.DataResponse;
+import org.fatmansoft.teach.util.CommonMethod;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.util.List;
 import java.util.Map;
+
+
 /**
- * StudentIntroduceController 登录交互控制类 对应 student-introduce-panel..fxml
+ * StudentIntroduceController 登录交互控制类 对应 student-introduce-panel.fxml
  *  @FXML  属性 对应fxml文件中的
  *  @FXML 方法 对应于fxml文件中的 on***Click的属性
  *  该功能是为学生提供生成个人简历的是示例成程序，继承了多种布局容器和多种组件，集成PDF生成转换技术。学生可以在此程序的基础上进行修改，扩展，
  *  在简单熟悉HTML的基础上，构建比较美观丰富的个人简历，并生成和下载PDF文件
  */
+
 public class StudentIntroduceController extends ToolController {
     private ImageView photoImageView;
     private ObservableList<Map> observableList= FXCollections.observableArrayList();
@@ -97,9 +105,10 @@ public class StudentIntroduceController extends ToolController {
     }
 
     /**
-     * getIntroduceData 从后天获取当前学生的所有信息，不传送的面板各个组件中
+     * getIntroduceData 从后台获取当前学生的所有信息，不传送的面板各个组件中
      */
     public void getIntroduceData(){
+
         DataRequest req = new DataRequest();
         DataResponse res;
         res = HttpRequestUtil.request("/api/student/getStudentIntroduceData",req);
@@ -124,9 +133,14 @@ public class StudentIntroduceController extends ToolController {
         List<Map> scoreList= (List)data.get("scoreList");
         List<Map>markList = (List)data.get("markList");
         List<Map>feeList = (List)data.get("feeList");
+
+        /* 删除课程名为空值的课程 */
+        scoreList.removeIf(map -> map.get("courseName") == null);
+
         for (Map m: scoreList) {
             observableList.addAll(FXCollections.observableArrayList(m));
         }
+
         scoreTable.setItems(observableList);  // 成绩表数据显示
 
 
@@ -144,8 +158,9 @@ public class StudentIntroduceController extends ToolController {
                 FXCollections.<XYChart.Series<String, Number>>observableArrayList();
         barData.add(seriesFee);
         barChart.setData(barData); //消费数据直方图展示
-        displayPhoto();
 
+
+        displayPhoto();
     }
     public void displayPhoto(){
         DataRequest req = new DataRequest();
@@ -191,7 +206,7 @@ public class StudentIntroduceController extends ToolController {
     public void onPhotoButtonClick(){
         FileChooser fileDialog = new FileChooser();
         fileDialog.setTitle("图片上传");
-//        fileDialog.setInitialDirectory(new File("C:/"));
+//      fileDialog.setInitialDirectory(new File("C:/"));
         fileDialog.getExtensionFilters().addAll(
                 new FileChooser.ExtensionFilter("JPG 文件", "*.jpg"));
         File file = fileDialog.showOpenDialog(null);

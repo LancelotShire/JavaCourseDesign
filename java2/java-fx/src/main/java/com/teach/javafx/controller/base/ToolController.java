@@ -1,7 +1,5 @@
 package com.teach.javafx.controller.base;
 
-import javafx.scene.Scene;
-
 /**
  *ToolController 这个是一个抽象类，这些方法共具体数据管理功能实现的Controller类重写，已支持框架对编辑功能菜单的实现的业务扩展
  */

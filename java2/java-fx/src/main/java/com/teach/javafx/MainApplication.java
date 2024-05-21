@@ -1,8 +1,6 @@
 package com.teach.javafx;
 
-import com.teach.javafx.controller.base.MessageDialog;
 import com.teach.javafx.request.HttpRequestUtil;
-import com.teach.javafx.request.SQLiteJDBC;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -14,6 +12,12 @@ import java.io.IOException;
  * 应用的主程序 MainApplication 按照编程规范，需继承Application 重写start 方法 主方法调用Application的launch() 启动程序
  */
 public class MainApplication extends Application {
+    public static void setMainStage(Stage stage) {
+        mainStage.close();
+        MainApplication.mainStage = stage;
+        mainStage.show();
+    }
+
     /**
      * 加载登录对话框，设置登录Scene到Stage,显示该场景
      * @param stage
@@ -27,9 +31,9 @@ public class MainApplication extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("base/login-view.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 320, 240);
-//        scene.getStylesheets().add(getClass().getResource("css/styles.css").toExternalForm());
+        FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("base/login_way_choose.fxml"));
+        Scene scene = new Scene(fxmlLoader.load(), 600, 400);
+        /* scene.getStylesheets().add(getClass().getResource("css/styles.css").toExternalForm()); */
         stage.setTitle("登录");
         stage.setScene(scene);
         stage.show();

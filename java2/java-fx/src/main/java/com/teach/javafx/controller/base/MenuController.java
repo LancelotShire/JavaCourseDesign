@@ -1,18 +1,16 @@
 package com.teach.javafx.controller.base;
 
-import com.teach.javafx.request.*;
+import com.teach.javafx.request.HttpRequestUtil;
+import com.teach.javafx.request.MyTreeNode;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import org.fatmansoft.teach.payload.request.DataRequest;
 import org.fatmansoft.teach.payload.response.DataResponse;
 
-import java.lang.reflect.Method;
 import java.util.List;
-import java.util.Map;
 import java.util.StringTokenizer;
 
 /**

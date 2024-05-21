@@ -45,6 +45,9 @@ public class ScoreController {
         OptionItem item;
         List<OptionItem> itemList = new ArrayList();
         for (Course c : sList) {
+
+            if(c.getName() == null) continue;
+
             itemList.add(new OptionItem(c.getCourseId(),c.getCourseId()+"", c.getNum()+"-"+c.getName()));
         }
         return new OptionItemList(0, itemList);
@@ -59,7 +62,7 @@ public class ScoreController {
         if(courseId == null)
             courseId = 0;
         List<Score> sList = scoreRepository.findByStudentCourse(studentId, courseId);  //数据库查询操作
-        List dataList = new ArrayList();
+        List<Map> dataList = new ArrayList<>();
         Map m;
         for (Score s : sList) {
             m = new HashMap();
@@ -75,6 +78,10 @@ public class ScoreController {
             m.put("mark",""+s.getMark());
             dataList.add(m);
         }
+
+        /* 删除课程号为null的记录 */
+        dataList.removeIf(map -> map.get("courseName") == null);
+
         return CommonMethod.getReturnData(dataList);
     }
     @PostMapping("/scoreSave")

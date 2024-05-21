@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 import java.util.Optional;
+
 /**
  * Student 数据操作接口，主要实现Person数据的查询操作
  * Integer getMaxId()  Student 表中的最大的student_id;    JPQL 注解
@@ -20,6 +21,7 @@ import java.util.Optional;
 public interface StudentRepository extends JpaRepository<Student,Integer> {
     Optional<Student> findByPersonPersonId(Integer personId);
     Optional<Student> findByPersonNum(String num);
+    Optional<Student> findByStudentId(Integer studentId);
     List<Student> findByPersonName(String name);
 
     @Query(value = "from Student where ?1='' or person.num like %?1% or person.name like %?1% ")

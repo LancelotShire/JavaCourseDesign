@@ -2,13 +2,15 @@ package com.teach.javafx.controller.base;
 
 import com.teach.javafx.AppStore;
 import com.teach.javafx.MainApplication;
-import com.teach.javafx.request.*;
+import com.teach.javafx.request.HttpRequestUtil;
+import com.teach.javafx.request.LoginRequest;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
-import javafx.scene.control.Button;
+
 import java.io.IOException;
 
 /**
@@ -50,7 +52,7 @@ public class LoginController {
         LoginRequest loginRequest = new LoginRequest(username,password);
         String msg = HttpRequestUtil.login(loginRequest);
         if(msg != null) {
-            MessageDialog.showDialog( msg);
+            MessageDialog.showDialog(msg);
             return;
         }
         FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("base/main-frame.fxml"));

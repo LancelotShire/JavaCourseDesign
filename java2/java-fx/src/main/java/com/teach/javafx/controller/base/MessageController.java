@@ -2,7 +2,6 @@ package com.teach.javafx.controller.base;
 
 import com.teach.javafx.MainApplication;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;

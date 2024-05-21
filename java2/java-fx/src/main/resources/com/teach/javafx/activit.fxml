@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="682.0" prefWidth="953.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.teach.javafx.controller.ActivitController">
+    <top>
+        <HBox prefHeight="37.0" prefWidth="600.0" BorderPane.alignment="CENTER">
+            <children>
+                <FlowPane prefHeight="200.0" prefWidth="200.0">
+                    <children>
+                        <Button mnemonicParsing="false" onAction="#onAddButtonClick" text="添加">
+                            <FlowPane.margin>
+                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                            </FlowPane.margin>
+                        </Button>
+                        <Button mnemonicParsing="false" onAction="#onShuaxinButtonClick" text="刷新">
+                            <FlowPane.margin>
+                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                            </FlowPane.margin>
+                        </Button>
+                        <Button fx:id="shanchu" mnemonicParsing="false" onAction="#onDeleteButtonClick" text="删除">
+                            <FlowPane.margin>
+                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                            </FlowPane.margin>
+                        </Button>
+                    </children>
+                </FlowPane>
+                <Pane prefHeight="37.0" prefWidth="540.0" />
+                <FlowPane prefHeight="37.0" prefWidth="183.0">
+                    <children>
+                        <Label fx:id="biaoqian" text="学号">
+                            <FlowPane.margin>
+                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                            </FlowPane.margin>
+                        </Label>
+                        <TextField fx:id="numNameTextField" prefHeight="23.0" prefWidth="87.0" />
+                        <Button fx:id="chaxun" mnemonicParsing="false" onAction="#onQueryButtonClick" text="查询">
+                            <FlowPane.margin>
+                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                            </FlowPane.margin>
+                        </Button>
+                    </children>
+                </FlowPane>
+            </children>
+        </HBox>
+    </top>
+    <center>
+        <SplitPane dividerPositions="0.7790178571428572" prefHeight="340.0" prefWidth="600.0" BorderPane.alignment="CENTER">
+            <items>
+                <TableView fx:id="dataTableView" prefHeight="642.0" prefWidth="657.0">
+                    <columns>
+                        <TableColumn fx:id="nameColumn" prefWidth="62.00000127156545" text="姓名" />
+                        <TableColumn fx:id="numColumn" prefWidth="104.66669082641602" text="学号" />
+                        <TableColumn fx:id="thingColumn" prefWidth="88.0" text="内容" />
+                        <TableColumn fx:id="modelColumn" prefWidth="88.66667175292969" text="类型" />
+                        <TableColumn fx:id="windateColumn" prefWidth="92.00006103515625" text="日期" />
+                        <TableColumn fx:id="somewordColumn" minWidth="0.0" prefWidth="347.33331298828125" text="备注" />
+                    </columns>
+                </TableView>
+                <VBox prefHeight="200.0" prefWidth="100.0">
+                    <children>
+                        <GridPane>
+                            <columnConstraints>
+                                <ColumnConstraints />
+                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="83.3333740234375" minWidth="10.0" prefWidth="47.999996185302734" />
+                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="128.00000381469727" minWidth="10.0" prefWidth="128.00000381469727" />
+                            </columnConstraints>
+                            <rowConstraints>
+                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                            </rowConstraints>
+                            <children>
+                                <Label text="内容" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                                    <GridPane.margin>
+                                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                    </GridPane.margin>
+                                </Label>
+                                <Label text="类型" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                                    <GridPane.margin>
+                                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                    </GridPane.margin>
+                                </Label>
+                                <Label text="日期" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                                    <GridPane.margin>
+                                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                    </GridPane.margin>
+                                </Label>
+                                <Label text="备注" GridPane.columnIndex="1" GridPane.rowIndex="5">
+                                    <GridPane.margin>
+                                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                    </GridPane.margin>
+                                </Label>
+                                <TextField fx:id="thingField" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                                <TextField fx:id="somewordField" GridPane.columnIndex="2" GridPane.rowIndex="5" />
+                                <DatePicker fx:id="windatePick" GridPane.columnIndex="2" GridPane.rowIndex="4" />
+                                <ComboBox fx:id="modelComboBox" prefWidth="150.0" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+                                <Label text="姓名" GridPane.columnIndex="1">
+                                    <GridPane.margin>
+                                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                    </GridPane.margin>
+                                </Label>
+                                <Label text="学号" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                    <GridPane.margin>
+                                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                    </GridPane.margin>
+                                </Label>
+                                <TextField fx:id="nameField" GridPane.columnIndex="2" />
+                                <TextField fx:id="numField" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                            </children>
+                        </GridPane>
+                        <FlowPane prefHeight="43.0" prefWidth="176.0">
+                            <children>
+                                <Pane prefHeight="39.0" prefWidth="59.0" />
+                                <Pane prefHeight="39.0" prefWidth="72.0">
+                                    <children>
+                                        <Button layoutX="14.0" layoutY="8.0" mnemonicParsing="false" onAction="#onSaveButtonClick" text="保存" />
+                                    </children>
+                                </Pane>
+                            </children>
+                        </FlowPane>
+                    </children>
+                    <padding>
+                        <Insets top="10.0" />
+                    </padding>
+                </VBox>
+            </items>
+        </SplitPane>
+    </center>
+</BorderPane>
+

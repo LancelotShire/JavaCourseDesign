@@ -18,6 +18,8 @@ import org.fatmansoft.teach.payload.response.DataResponse;
 import org.fatmansoft.teach.util.CommonMethod;
 
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class StatisticsController {
     @FXML
@@ -79,6 +81,8 @@ public class StatisticsController {
                 }
 
                 scoreList.add(personalList.get(0));
+                updateNameList();
+
             }
         }
 
@@ -92,15 +96,12 @@ public class StatisticsController {
             observableList.addAll(FXCollections.observableArrayList(scoreList.get(j)));
         }
         dataTableView.setItems(observableList);
+        scoreList = new ArrayList<>();
     }
 
     @FXML
     public void initialize(){
-        DataRequest req =new DataRequest();
-        nameList = HttpRequestUtil.requestOptionItemList("/api/score/getStudentItemOptionList",req);
-        OptionItem item = new OptionItem(0,null,"请选择");
-        nameComboBox.getItems().addAll(item);
-        nameComboBox.getItems().addAll(nameList);
+        updateNameList();
 
         studentNumColumn.setCellValueFactory(new MapValueFactory<>("studentNum"));
         studentNameColumn.setCellValueFactory(new MapValueFactory<>("studentName"));
@@ -119,6 +120,7 @@ public class StatisticsController {
         if(list.isEmpty()){
             return result;
         }
+        float gainedSumCredit = 0;
         float sumCredit = 0;
         float sumGo = 0;
         float sumMark = 0;
@@ -131,12 +133,13 @@ public class StatisticsController {
         info.put("className",className);
         for(Map map : list){
             float mark = Float.parseFloat(map.get("mark").toString());
+            float credit = Float.parseFloat(map.get("credit").toString());
+            sumCredit += credit;
             if(mark < 60){
                 continue;
             }
-            float credit = Float.parseFloat(map.get("credit").toString());
             float go = (mark - 50)/10;
-            sumCredit += credit;
+            gainedSumCredit += credit;
             sumGo += go * credit;
             sumMark += mark;
             count += 1;
@@ -147,15 +150,119 @@ public class StatisticsController {
         info.put("averageScore",averMark);
         info.put("go",averGo);
         info.put("hyaku",averHyaku);
-        info.put("totalCredit",sumCredit);
+        info.put("totalCredit",gainedSumCredit);
         result.add(info);
         return result;
     }
 
     @FXML
-    private void save(){
+    private void onQueryButtonClickInDatabase(){
+        Integer studentId;
+        OptionItem op;
         DataRequest req = new DataRequest();
-        DataResponse res = HttpRequestUtil.request("/api/scoreStatistics/getScoreStatisticsList",req);
+        op = nameComboBox.getSelectionModel().getSelectedItem();
+        if(op != null && op.getValue() != null){
+            String input = op.getTitle();
+            Pattern pattern = Pattern.compile("\\d+"); // 匹配一个或多个数字
+            Matcher matcher = pattern.matcher(input);
+            String studentNum = "";
+
+            while (matcher.find()) {
+                studentNum = matcher.group();
+            }
+
+            System.out.println(studentNum);
+            req.add("numName",studentNum);
+            DataResponse res = HttpRequestUtil.request("/api/scoreStatistics/getScoreStatisticsList",req);
+
+            if(res.getCode()== 0) {
+                scoreList = (ArrayList<Map>)res.getData();
+                System.out.println(scoreList.get(0).get("studentNum"));
+            }
+        }else{
+            req.add("statisticsId","");
+            DataResponse res = HttpRequestUtil.request("/api/scoreStatistics/getScoreStatisticsList",req);
+
+            if(res.getCode()== 0) {
+                scoreList = (ArrayList<Map>)res.getData();
+            }
+        }
+
+        System.out.println(scoreList);
+        setTableViewData();
+        scoreList = new ArrayList<>();
+        updateNameList();
     }
 
+    @FXML
+    private void onSaveButtonClick(){
+        boolean status = true;
+        Integer studentId;
+        Integer courseId = 0;
+        DataRequest req;
+        ArrayList<Map> personalList = new ArrayList<>();
+        System.out.println(nameList);
+        for(OptionItem person : nameList) {
+            studentId = person.getId();
+            DataResponse res;
+            req = new DataRequest();
+            req.add("studentId", studentId);
+            req.add("courseId", courseId);
+            res = HttpRequestUtil.request("/api/score/getScoreList", req);
+
+            ArrayList<Map> arrayList = (ArrayList<Map>) res.getData();
+            System.out.println(arrayList);
+            if (res.getCode() == 0) {
+                personalList = calculate(arrayList);
+            }
+            Map map = personalList.get(0);
+            map.put("studentId",studentId);
+            scoreList.add(map);
+            System.out.println(map);
+            System.out.println(scoreList);
+        }
+        System.out.println(scoreList);
+
+        if(scoreList.isEmpty()){
+            MessageDialog.showDialog("提交失败,因为表是空的！");
+            return;
+        }
+
+        for(Map map:scoreList){
+            req = new DataRequest();
+            req.add("statisticsId",map.get("studentId"));
+            req.add("studentNum",map.get("studentNum"));
+            req.add("studentName",map.get("studentName"));
+            req.add("className",map.get("className"));
+            req.add("go",map.get("go"));
+            req.add("hyaku",map.get("hyaku"));
+            req.add("averageScore",map.get("averageScore"));
+            req.add("totalCredit",map.get("totalCredit"));
+
+            DataResponse res = HttpRequestUtil.request("/api/scoreStatistics/saveScoreStatistics",req);
+
+            if (res != null && res.getCode() != 0) status = false;
+        }
+
+        if(status){
+            MessageDialog.showDialog("提交成功！");
+            scoreList = new ArrayList<>();
+            onQueryButtonClick();
+        }else{
+            MessageDialog.showDialog("提交失败！");
+        }
+
+        scoreList = new ArrayList<>();
+        updateNameList();
+    }
+
+    private void updateNameList(){
+        nameList = new ArrayList<>();
+        nameComboBox.getItems().clear();
+        DataRequest req =new DataRequest();
+        nameList = HttpRequestUtil.requestOptionItemList("/api/score/getStudentItemOptionList",req);
+        OptionItem item = new OptionItem(0,null,"请选择");
+        nameComboBox.getItems().addAll(item);
+        nameComboBox.getItems().addAll(nameList);
+    }
 }

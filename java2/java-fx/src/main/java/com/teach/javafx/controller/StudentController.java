@@ -2,36 +2,37 @@ package com.teach.javafx.controller;
 
 import com.teach.javafx.MainApplication;
 import com.teach.javafx.controller.base.LocalDateStringConverter;
+import com.teach.javafx.controller.base.MessageDialog;
 import com.teach.javafx.controller.base.ToolController;
-import com.teach.javafx.request.*;
+import com.teach.javafx.request.HttpRequestUtil;
+import com.teach.javafx.request.OptionItem;
+import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Group;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.MapValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.Region;
+import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.fatmansoft.teach.payload.request.DataRequest;
 import org.fatmansoft.teach.payload.response.DataResponse;
 import org.fatmansoft.teach.util.CommonMethod;
-import com.teach.javafx.controller.base.MessageDialog;
-import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableList;
-import javafx.fxml.FXML;
-import javafx.scene.control.*;
-import javafx.scene.control.cell.MapValueFactory;
-import javafx.stage.FileChooser;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Flow;
 
 /**
  * StudentController 登录交互控制类 对应 student_panel.fxml  对应于学生管理的后台业务处理的控制器，主要获取数据和保存数据的方法不同
@@ -270,12 +271,10 @@ public class StudentController extends ToolController {
         form.put("email", emailField.getText());
         form.put("phone", phoneField.getText());
         form.put("address", addressField.getText());
-
         DataRequest req = new DataRequest();
         req.add("studentId", studentId);
         req.add("form", form);
         DataResponse res = HttpRequestUtil.request("/api/student/studentEditSave", req);
-
         if (res.getCode() == 0) {
             studentId = CommonMethod.getIntegerFromObject(res.getData());
             MessageDialog.showDialog("提交成功！");
@@ -356,11 +355,13 @@ public class StudentController extends ToolController {
         }
         List<Map> familyList = (List<Map>) res.getData();
         ObservableList<Map> oList = FXCollections.observableArrayList(familyList);
+
         Scene scene = null, pScene = null;
         Stage stage;
         stage = new Stage();
         TableView<Map> table = new TableView<>(oList);
         table.setEditable(true);
+
         TableColumn<Map, String> relationColumn = new TableColumn<>("关系");
         relationColumn.setCellValueFactory(new MapValueFactory("relation"));
         relationColumn.setCellFactory(TextFieldTableCell.<Map>forTableColumn());
@@ -370,43 +371,191 @@ public class StudentController extends ToolController {
             tempEntity.put("relation",event.getNewValue());
         });
         table.getColumns().add(relationColumn);
+
         TableColumn<Map, String> nameColumn = new TableColumn<>("姓名");
         nameColumn.setCellValueFactory(new MapValueFactory("name"));
         nameColumn.setCellFactory(TextFieldTableCell.<Map>forTableColumn());
+        nameColumn.setOnEditCommit(event -> {
+            TableView tempTable = event.getTableView();
+            Map tempEntity = (Map) tempTable.getItems().get(event.getTablePosition().getRow());
+            tempEntity.put("name",event.getNewValue());
+        });
         table.getColumns().add(nameColumn);
+
         TableColumn<Map, String> genderColumn = new TableColumn<>("性别");
         genderColumn.setCellValueFactory(new MapValueFactory("gender"));
         genderColumn.setCellFactory(TextFieldTableCell.<Map>forTableColumn());
+        genderColumn.setOnEditCommit(event -> {
+            TableView tempTable = event.getTableView();
+            Map tempEntity = (Map) tempTable.getItems().get(event.getTablePosition().getRow());
+            tempEntity.put("gender",event.getNewValue());
+        });
         table.getColumns().add(genderColumn);
+
         TableColumn<Map, String> ageColumn = new TableColumn<>("年龄");
         ageColumn.setCellValueFactory(new MapValueFactory("age"));
         ageColumn.setCellFactory(TextFieldTableCell.<Map>forTableColumn());
+        ageColumn.setOnEditCommit(event -> {
+            TableView tempTable = event.getTableView();
+            Map tempEntity = (Map) tempTable.getItems().get(event.getTablePosition().getRow());
+            tempEntity.put("age",event.getNewValue());
+        });
         table.getColumns().add(ageColumn);
+
         TableColumn<Map, String> unitColumn = new TableColumn<>("单位");
         unitColumn.setCellValueFactory(new MapValueFactory("unit"));
         unitColumn.setCellFactory(TextFieldTableCell.<Map>forTableColumn());
+        unitColumn.setOnEditCommit(event -> {
+            TableView tempTable = event.getTableView();
+            Map tempEntity = (Map) tempTable.getItems().get(event.getTablePosition().getRow());
+            tempEntity.put("unit",event.getNewValue());
+        });
         table.getColumns().add(unitColumn);
+
         BorderPane root = new BorderPane();
         FlowPane flowPane = new FlowPane();
         Button obButton = new Button("确定");
         obButton.setOnAction(event -> {
             for(Map map: table.getItems()) {
                 System.out.println("map:"+map);
+
+                if(map.get("relation") == null || map.get("name") == null ||
+                        map.get("gender") == null || map.get("age") == null || map.get("unit") == null) {
+                    MessageDialog.showDialog("字段不能为空!");
+                    onQueryButtonClick();
+                    break;
+                }
+
+                System.out.println("uploading...");
+                DataRequest req1 = new DataRequest();
+                req1.add("studentId", map.get("studentId"));
+                req1.add("memberId", map.get("memberId"));
+                req1.add("relation", map.get("relation"));
+                req1.add("name", map.get("name"));
+                req1.add("gender", map.get("gender"));
+                req1.add("age", map.get("age"));
+                req1.add("unit", map.get("unit"));
+                DataResponse res1 = HttpRequestUtil.request("/api/student/familyMemberSave", req1);
+                if (res.getCode() == 0) {
+                    studentId = CommonMethod.getIntegerFromObject(res.getData());
+                    MessageDialog.showDialog("提交成功！");
+                    onQueryButtonClick();
+                } else {
+                    MessageDialog.showDialog(res.getMsg());
+                }
             }
             stage.close();
         });
         flowPane.getChildren().add(obButton);
+
+        /* 为两个按钮之间添加空白 */
+        Region spacer = new Region();
+        spacer.setPrefWidth(10);
+        flowPane.getChildren().add(spacer);
+
+        // 添加新成员
+        Button addButton = new Button("添加");
+        addButton.setOnAction(event -> {
+            Map newEntry = new HashMap<>(); // 创建一个新的空数据行
+            newEntry.put("studentId", studentId);
+            newEntry.put("memberId", null);
+            newEntry.put("relation", "新成员"); // 设置关系字段为空
+            newEntry.put("name", null); // 设置姓名字段为空
+            newEntry.put("gender", null); // 设置性别字段为空
+            newEntry.put("age", null); // 设置年龄字段为空
+            newEntry.put("unit", null); // 设置单位字段为空
+            table.getItems().add(newEntry); // 向TableView中添加新行
+        });
+
+
+        int obButtonIndex = flowPane.getChildren().indexOf(obButton); // 获取"确定"按钮的索引位置
+        flowPane.getChildren().add(obButtonIndex + 2, addButton); // 将新按钮添加到"确定"按钮的右边
+        /* 为两个按钮之间添加空白 */
+        Region spacer1 = new Region();
+        spacer1.setPrefWidth(10);
+        flowPane.getChildren().add(spacer1);
+
+        Button delButton = new Button("删除");
+        delButton.setOnAction(event -> {
+            ObservableList<Map> selectedItems = table.getSelectionModel().getSelectedItems();
+            System.out.println("delete");
+            if (!selectedItems.isEmpty()) {
+                for (Map selectedItem : selectedItems) {
+                    // 调用后端函数以删除对应的数据
+                    DataRequest deleteReq = new DataRequest();
+                    deleteReq.add("memberId", selectedItem.get("memberId"));
+                    DataResponse deleteRes = HttpRequestUtil.request("/api/student/familyMemberDelete", deleteReq);
+                    if (deleteRes.getCode() == 0) {
+                        // 如果删除成功，从TableView中移除该行
+                        table.getItems().remove(selectedItem);
+                        MessageDialog.showDialog("删除成功！");
+                    } else {
+                        // 如果删除失败，显示错误消息
+                        MessageDialog.showDialog(deleteRes.getMsg());
+                    }
+                }
+            } else {
+                // 如果没有选中任何行，显示提示消息
+                MessageDialog.showDialog("请选择要删除的行。");
+            }
+        });
+
+        int addButtonIndex = flowPane.getChildren().indexOf(addButton); // 获取"确定"按钮的索引位置
+        flowPane.getChildren().add(addButtonIndex + 2, delButton); // 将新按钮添加到"确定"按钮的右边
+
+        /* 提示正文 */
+        BorderPane titlePane = new BorderPane();
+        Label descriptionLabel = new Label("  提示: 双击表格进行编辑");
+        Label blankSpace = new Label("                        ");
+        VBox titleBox = new VBox(descriptionLabel, blankSpace);
+        titlePane.setTop(titleBox);
+
         root.setCenter(table);
         root.setBottom(flowPane);
-        scene = new Scene(root, 260, 140);
+        root.setTop(titlePane);
+
+
+        scene = new Scene(root, 400, 200);
         stage.initOwner(MainApplication.getMainStage());
         stage.initModality(Modality.NONE);
         stage.setAlwaysOnTop(true);
         stage.setScene(scene);
-        stage.setTitle("成绩录入对话框！");
+        stage.setTitle("家庭成员");
         stage.setOnCloseRequest(event -> {
             MainApplication.setCanClose(true);
         });
         stage.showAndWait();
     }
+
+    @FXML
+    protected void onIntroductionButtonClick() {
+        if(studentId == null) {
+            MessageDialog.showDialog("学号为空！");
+            return;
+        }
+
+        try {
+        // 创建FXMLLoader实例并加载FXML文件
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/teach/javafx/student-introduce-by-admin-panel.fxml"));
+
+        // 加载FXML文件并获取根节点
+        Parent root = fxmlLoader.load();
+        StudentIntroduceByAdminController controller = fxmlLoader.getController();
+        controller.setStudentId(studentId);
+
+        // 设置场景和显示舞台
+        Scene scene = new Scene(root, 1200, 600);
+        Stage stage = new Stage();
+        stage.setTitle("学生个人简介");
+        stage.setScene(scene);
+        stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
 }
+
+
+

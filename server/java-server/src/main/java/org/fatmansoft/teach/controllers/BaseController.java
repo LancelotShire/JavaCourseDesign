@@ -1,13 +1,19 @@
 package org.fatmansoft.teach.controllers;
 
 import lombok.extern.slf4j.Slf4j;
-import org.fatmansoft.teach.models.*;
+import org.fatmansoft.teach.models.DictionaryInfo;
+import org.fatmansoft.teach.models.MenuInfo;
+import org.fatmansoft.teach.models.User;
+import org.fatmansoft.teach.models.UserType;
 import org.fatmansoft.teach.payload.request.DataRequest;
 import org.fatmansoft.teach.payload.response.DataResponse;
 import org.fatmansoft.teach.payload.response.MyTreeNode;
 import org.fatmansoft.teach.payload.response.OptionItem;
 import org.fatmansoft.teach.payload.response.OptionItemList;
-import org.fatmansoft.teach.repository.*;
+import org.fatmansoft.teach.repository.DictionaryInfoRepository;
+import org.fatmansoft.teach.repository.MenuInfoRepository;
+import org.fatmansoft.teach.repository.UserRepository;
+import org.fatmansoft.teach.repository.UserTypeRepository;
 import org.fatmansoft.teach.service.BaseService;
 import org.fatmansoft.teach.util.ComDataUtil;
 import org.fatmansoft.teach.util.CommonMethod;
@@ -24,10 +30,9 @@ import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBo
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.*;
-import java.lang.reflect.Method;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.*;
-import java.util.List;
 
 /**
  * BaseController 主要时为前台框架的基本数据管理提供的Web请求服务
@@ -336,6 +341,7 @@ public class BaseController {
     }
 
 
+
     /**
      * 上传文件服务
      * 前台请求参数  uploader 信息  remoteFile 服务器文件路径  fileName 前端上传的文件名
@@ -349,7 +355,7 @@ public class BaseController {
                                     @RequestParam(name = "remoteFile") String remoteFile,
                                     @RequestParam(name = "fileName") String fileName) {
         try {
-            OutputStream os = new FileOutputStream(new File(attachFolder + remoteFile));
+            OutputStream os = Files.newOutputStream(new File(attachFolder + remoteFile).toPath());
             os.write(barr);
             os.close();
             return CommonMethod.getReturnMessageOK();

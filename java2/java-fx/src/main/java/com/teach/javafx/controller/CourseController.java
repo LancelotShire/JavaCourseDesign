@@ -4,6 +4,7 @@ import com.teach.javafx.MainApplication;
 import com.teach.javafx.controller.base.MessageDialog;
 import com.teach.javafx.request.OptionItem;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.cell.MapValueFactory;
@@ -127,8 +128,33 @@ public class CourseController {
     public void deleteItem(String name){
         if(name == null)
             return;
-        int j = Integer.parseInt(name.substring(5,name.length()));
+        int j = Integer.parseInt(name.substring(6));
         Map data = courseList.get(j);
+
+        final Object[] courseId = new Object[1];
+
+        observableList.removeIf(map -> {
+            FlowPane flowPane = (FlowPane) map.get("operate");
+            for (Node node : flowPane.getChildren()) {
+                Button button = (Button) node;
+                if (button.getId().startsWith("delete") && button.getId().equals(name)) {
+                    courseId[0] = map.get("courseId");
+                    return true;
+                }
+            }
+            return false;
+        }); // 从observableList中删除项目
+        dataTableView.refresh(); // 刷新TableView
+        DataResponse res;
+        DataRequest req =new DataRequest();
+        req.add("courseId", courseId[0]);
+        res = HttpRequestUtil.request("/api/course/courseDelete",req);
+//        if (res.getCode() == 0) {
+//            MessageDialog.showDialog("删除成功！");
+//            onQueryButtonClick();
+//        } else {
+//            MessageDialog.showDialog(res.getMsg());
+//        }
         System.out.println(data);
     }
 

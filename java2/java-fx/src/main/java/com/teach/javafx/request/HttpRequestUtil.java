@@ -1,23 +1,23 @@
 package com.teach.javafx.request;
 
-import com.teach.javafx.AppStore;
 import com.google.gson.Gson;
+import com.teach.javafx.AppStore;
 import org.fatmansoft.teach.payload.request.DataRequest;
 import org.fatmansoft.teach.payload.response.DataResponse;
-import org.fatmansoft.teach.util.JsonConvertUtil;
 import org.fatmansoft.teach.util.CommonMethod;
+import org.fatmansoft.teach.util.JsonConvertUtil;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
-import java.net.URI;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
-import java.nio.file.Path;
 import java.util.Map;
 
 /**
@@ -254,7 +254,7 @@ public class HttpRequestUtil {
             if(response.statusCode() == 200) {
                 OptionItemList o = gson.fromJson(response.body(), OptionItemList.class);
                 if(o != null)
-                return o.getItemList();
+                    return o.getItemList();
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -292,6 +292,7 @@ public class HttpRequestUtil {
         HttpClient client = HttpClient.newHttpClient();
         try {
             HttpResponse<byte[]>  response = client.send(httpRequest, HttpResponse.BodyHandlers.ofByteArray());
+            System.out.println("url=/api/base/getFileByteData    " + "response.statusCode=" + response.statusCode());
             if(response.statusCode() == 200) {
                 return response.body();
             }
@@ -317,8 +318,12 @@ public class HttpRequestUtil {
                     .uri(URI.create(serverUrl+uri+"?uploader=HttpTestApp&remoteFile="+remoteFile + "&fileName="
                             + file.getFileName()))
                     .POST(HttpRequest.BodyPublishers.ofFile(file))
+                    .headers("Authorization", "Bearer " + AppStore.getJwt().getAccessToken())
                     .build();
             HttpResponse<String>  response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+            System.out.println("url=/api/base/uploadPhoto    " + "response.statusCode=" + response.statusCode());
+
             if(response.statusCode() == 200) {
                 DataResponse dataResponse = gson.fromJson(response.body(), DataResponse.class);
                 return dataResponse;

@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane  xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.teach.javafx.controller.AwardsController">
+    <top>
+        <HBox id="HBox" alignment="CENTER_LEFT" spacing="5.0" >
+            <children>
+                <FlowPane prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+                    <children>
+                        <Button mnemonicParsing="false" onAction="#onAddButtonClick" text="添加">
+                            <FlowPane.margin>
+                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                            </FlowPane.margin>
+                        </Button>
+                        <Button mnemonicParsing="false" onAction="#onDeleteButtonClick" text="删除">
+                            <FlowPane.margin>
+                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                            </FlowPane.margin>
+                        </Button>
+                        <Button mnemonicParsing="false" onAction="#doExport" text="导出">
+                            <FlowPane.margin>
+                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                            </FlowPane.margin>
+                        </Button>
+                    </children>
+                </FlowPane>
+                <Pane prefHeight="-1.0" prefWidth="-1.0" HBox.hgrow="ALWAYS" />
+                <FlowPane alignment="TOP_RIGHT" prefHeight="40.0" prefWidth="600.0" BorderPane.alignment="CENTER">
+                    <children>
+                        <TextField fx:id="numNameTextField" prefWidth="100.0">
+                            <FlowPane.margin>
+                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                            </FlowPane.margin></TextField>
+                        <Button mnemonicParsing="false" onAction="#onQueryButtonClick" text="查询">
+                            <FlowPane.margin>
+                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                            </FlowPane.margin></Button>
+                    </children>
+                </FlowPane>
+            </children>
+            <padding>
+                <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
+            </padding>
+        </HBox>
+    </top>
+    <center>
+        <SplitPane dividerPositions="0.7,0.3">
+            <items>
+                <TableView fx:id="dataTableView" >
+                    <columns>
+                        <TableColumn fx:id="numColumn" prefWidth="100.0" text="学号" />
+                        <TableColumn fx:id="nameColumn" prefWidth="70.0" text="姓名" />
+                        <TableColumn fx:id="awardsNameColumn" prefWidth="90.0" text="荣誉名称" />
+                        <TableColumn fx:id="awardsTypeColumn" prefWidth="90.0" text="荣誉类型" />
+                        <TableColumn fx:id="timeColumn" prefWidth="90.0" text="荣誉时长" />
+                        <TableColumn fx:id="timeOfAwardsColumn" prefWidth="75.0" text="荣誉时间" />
+                    </columns>
+                </TableView>
+                <VBox alignment="TOP_CENTER" spacing="20.0" >
+                    <padding>
+                        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                    </padding>
+                    <GridPane hgap="10.0">
+                        <columnConstraints>
+                            <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="124.0" minWidth="10.0" prefWidth="67.0" />
+                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="193.0" minWidth="10.0" prefWidth="193.0" />
+                        </columnConstraints>
+                        <rowConstraints>
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        </rowConstraints>
+                        <children>
+                            <Label text="学号" GridPane.rowIndex="0" />
+                            <TextField fx:id="numField" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                            <Label text="姓名" GridPane.rowIndex="1" />
+                            <TextField fx:id="nameField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                            <Label text="荣誉名称" GridPane.rowIndex="2" />
+                            <TextField fx:id="awardsNameField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                            <Label text="荣誉类型" GridPane.rowIndex="3" />
+                            <ComboBox fx:id="awardsTypeComboBox" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                            <Label text="荣誉时长" GridPane.rowIndex="4" />
+                            <TextField fx:id="timeField" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                            <Label text="荣誉时间" GridPane.rowIndex="6" />
+                            <DatePicker fx:id="timeOfAwardsPick" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+
+                        </children>
+                    </GridPane>
+                    <FlowPane alignment="CENTER" columnHalignment="CENTER" prefHeight="36.0">
+                        <Button onAction="#onSaveButtonClick" text="保存" />
+                    </FlowPane>
+                </VBox>
+            </items>
+        </SplitPane>
+    </center>
+</BorderPane>

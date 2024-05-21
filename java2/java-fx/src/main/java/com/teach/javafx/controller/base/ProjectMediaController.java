@@ -7,7 +7,6 @@ import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
 
 import java.net.URL;
-import java.util.List;
 
 import static javafx.scene.media.MediaPlayer.Status.PLAYING;
 
